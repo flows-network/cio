@@ -60,10 +60,10 @@ dependencies = [
  "anyhow",
  "chrono",
  "log 0.4.19",
- "reqwest",
  "reqwest-middleware",
  "reqwest-retry",
  "reqwest-tracing",
+ "reqwest_wasi",
  "schemars",
  "serde",
  "serde_json",
@@ -1493,6 +1493,16 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "212d0f5754cb6769937f4501cc0e67f4f4483c8d2c3e1e922ee9edbe4ab4c7c0"
 
 [[package]]
+name = "dns-parser"
+version = "0.8.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "c4d33be9473d06f75f58220f71f7a9317aca647dc061dbd3c361b0bef505fbea"
+dependencies = [
+ "byteorder",
+ "quick-error",
+]
+
+[[package]]
 name = "docusign"
 version = "0.1.17"
 dependencies = [
@@ -2340,6 +2350,25 @@ dependencies = [
 ]
 
 [[package]]
+name = "h2_wasi"
+version = "0.3.15"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "15278003b75338787173b9fced9e4b6eda445a1254101e2398bbef2105657c9b"
+dependencies = [
+ "bytes",
+ "fnv",
+ "futures-core",
+ "futures-sink",
+ "futures-util",
+ "http",
+ "indexmap 1.9.3",
+ "slab",
+ "tokio-util_wasi",
+ "tokio_wasi",
+ "tracing",
+]
+
+[[package]]
 name = "handlebars"
 version = "4.3.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2602,6 +2631,30 @@ dependencies = [
  "native-tls",
  "tokio",
  "tokio-native-tls",
+]
+
+[[package]]
+name = "hyper_wasi"
+version = "0.15.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "e801b2e9f51eb106e0bdc5e744bb74edd475d9d35787cf7ff94ca383f86ad73e"
+dependencies = [
+ "bytes",
+ "futures-channel",
+ "futures-core",
+ "futures-util",
+ "h2_wasi",
+ "http",
+ "http-body",
+ "httparse",
+ "httpdate",
+ "itoa 1.0.6",
+ "pin-project-lite",
+ "tokio_wasi",
+ "tower-service",
+ "tracing",
+ "want",
+ "wasmedge_wasi_socket",
 ]
 
 [[package]]
@@ -3302,6 +3355,19 @@ checksum = "927a765cd3fc26206e66b296465fa9d3e5ab003e651c1b3c060e7956d96b19d2"
 dependencies = [
  "libc",
  "wasi 0.11.0+wasi-snapshot-preview1",
+ "windows-sys 0.48.0",
+]
+
+[[package]]
+name = "mio_wasi"
+version = "0.8.9"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "826049861effde5245d1107a8eb21846bd8fc7a16486e60be4d0568361c947e5"
+dependencies = [
+ "libc",
+ "log 0.4.19",
+ "wasi 0.11.0+wasi-snapshot-preview1",
+ "wasmedge_wasi_socket",
  "windows-sys 0.48.0",
 ]
 
@@ -4613,6 +4679,41 @@ dependencies = [
  "task-local-extensions",
  "tracing",
  "tracing-opentelemetry",
+]
+
+[[package]]
+name = "reqwest_wasi"
+version = "0.11.16"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "21168806a3eb09e3b8464cbc3f54a4b32a48f5563923edbe8f9567bff72e3fb4"
+dependencies = [
+ "base64 0.21.2",
+ "bytes",
+ "encoding_rs",
+ "futures-core",
+ "futures-util",
+ "h2_wasi",
+ "http",
+ "http-body",
+ "hyper_wasi",
+ "ipnet",
+ "js-sys",
+ "lazy_static",
+ "log 0.4.19",
+ "mime 0.3.17",
+ "once_cell",
+ "percent-encoding 2.3.0",
+ "pin-project-lite",
+ "serde",
+ "serde_json",
+ "serde_urlencoded",
+ "tokio_wasi",
+ "tower-service",
+ "url 2.4.0",
+ "wasm-bindgen",
+ "wasm-bindgen-futures",
+ "web-sys",
+ "winreg",
 ]
 
 [[package]]
@@ -6237,6 +6338,37 @@ dependencies = [
 ]
 
 [[package]]
+name = "tokio-util_wasi"
+version = "0.7.5"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "b7c1741fa976df8c5adc7748a3769f1317aff9df6752bd33982b4e2d8a510f08"
+dependencies = [
+ "bytes",
+ "futures-core",
+ "futures-sink",
+ "pin-project-lite",
+ "tokio_wasi",
+ "tracing",
+]
+
+[[package]]
+name = "tokio_wasi"
+version = "1.25.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "6b3a7120cdbe4719425355a0f6b59191c67ab5ed4eebc64bdb12ea3bc8776adf"
+dependencies = [
+ "autocfg",
+ "bytes",
+ "libc",
+ "memchr",
+ "mio_wasi",
+ "pin-project-lite",
+ "socket2",
+ "wasmedge_wasi_socket",
+ "windows-sys 0.45.0",
+]
+
+[[package]]
 name = "toml"
 version = "0.5.11"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -6721,6 +6853,18 @@ dependencies = [
  "wasm-bindgen",
  "wasm-bindgen-futures",
  "web-sys",
+]
+
+[[package]]
+name = "wasmedge_wasi_socket"
+version = "0.5.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "900a4c17690ef5efcccbdc833853b3e48f2a0de589427a609ddb5e866e1cb91f"
+dependencies = [
+ "bytes",
+ "dns-parser",
+ "libc",
+ "rand",
 ]
 
 [[package]]
