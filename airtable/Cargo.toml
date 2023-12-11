@@ -1,12 +1,12 @@
 [package]
 name = "airtable-api-wasi"
 description = "An API client for Airtable"
-version = "0.2.0"
+version = "0.2.1"
 authors = ["Jess Frazelle <jess@oxide.computer>"]
 edition = "2021"
 license = "Apache-2.0"
-repository = "https://github.com/oxidecomputer/cio"
-documentation = "https://docs.rs/airtable-api"
+repository = "https://github.com/flows-network/cio"
+documentation = "https://docs.rs/airtable-api-wasi"
 
 [lib]
 name = "airtable_api"

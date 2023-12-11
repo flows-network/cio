@@ -220,6 +220,69 @@ impl Airtable {
         Ok(records)
     }
 
+    /// List records in a table for a particular view.
+    pub async fn filter_records<T: DeserializeOwned>(
+        &self,
+        table: &str,
+        view: Option<&str>,
+        fields: Vec<&str>,
+        filter_by_formula: Option<&str>,
+    ) -> Result<Vec<Record<T>>> {
+        let mut params = vec![("pageSize", "100".to_string())];
+        if let Some(view) = view {
+            params.push(("view", view.to_string()));
+        }
+        if let Some(filter) = filter_by_formula {
+            params.push(("filterByFormula", filter.to_string()));
+        }
+        for field in fields {
+            params.push(("fields[]", field.to_string()));
+        }
+
+        // Build the request.
+        let mut request = self.request(Method::GET, table.to_string(), (), Some(params.clone()))?;
+
+        let mut resp = self.client.execute(request).await?;
+        match resp.status() {
+            StatusCode::OK => (),
+            s => {
+                bail!("status code: {}, body: {}", s, resp.text().await?);
+            }
+        };
+
+        // Try to deserialize the response.
+        let mut r: APICall<T> = resp.json().await?;
+
+        let mut records = r.records;
+
+        let mut offset = r.offset;
+
+        // Paginate if we should.
+        // TODO: make this more DRY
+        while !offset.is_empty() {
+            let mut params = params.clone();
+            params.push(("offset", offset));
+            request = self.request(Method::GET, table.to_string(), (), Some(params))?;
+
+            resp = self.client.execute(request).await?;
+            match resp.status() {
+                StatusCode::OK => (),
+                s => {
+                    bail!("status code: {}, body: {}", s, resp.text().await?);
+                }
+            };
+
+            // Try to deserialize the response.
+            r = resp.json().await?;
+
+            records.append(&mut r.records);
+
+            offset = r.offset;
+        }
+
+        Ok(records)
+    }
+
     pub fn pages<T: DeserializeOwned>(&self, table: &str, view: &str, fields: Vec<&str>) -> Pages<T> {
         Pages::new(self, table, view, &fields)
     }
